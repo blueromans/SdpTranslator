@@ -1,0 +1,49 @@
+{
+  "name": "@blueromans/sdp-translator",
+  "description": "A simple SDP interoperability layer for Unified Plan/Plan B",
+  "author": {
+    "name": "Yaşar Özyurt",
+    "email": "blueromans@hotmail.com"
+  },
+  "version": "0.0.2",
+  "stability": "stable",
+  "keywords": [
+    "sdp",
+    "webrtc",
+    "react-native-webrtc",
+    "interoperability",
+    "polyfill"
+  ],
+  "main": "./lib/",
+  "scripts": {
+    "lint": "./node_modules/.bin/jshint .",
+    "validate": "npm ls"
+  },
+  "dependencies": {
+    "sdp-transform": "1.5.*"
+  },
+  "devDependencies": {
+    "browserify": "^10.2.4",
+    "browserify-optional": "^1.0.0",
+    "coveralls": "^2.11.1",
+    "grunt": "^0.4.5",
+    "grunt-browserify": "~3.8.0",
+    "grunt-cli": "~0.1.13",
+    "grunt-contrib-clean": "~0.6.0",
+    "grunt-contrib-jshint": "^0.11.2",
+    "grunt-githooks": "^0.3.1",
+    "grunt-jscoverage": "^0.1.3",
+    "grunt-jsdoc": "^0.6.7",
+    "grunt-npm2bower-sync": "^0.9.1",
+    "grunt-shell": "^1.1.2",
+    "jscoverage": "^0.5.5",
+    "jshint": "2.8.0",
+    "minifyify": "~7.0.1",
+    "precommit-hook": "^3.0.0",
+    "qunit-cli": "^0.2.0"
+  },
+  "pre-commit": [
+    "lint"
+  ],
+  "license": "Apache-2.0"
+}
