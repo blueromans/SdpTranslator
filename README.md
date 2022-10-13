@@ -45,9 +45,13 @@ for video and one for the data.
 Install locally from npm:
 
 ```bash
-$ npm install sdp-interop
+$ npm install @blueromans/sdp-translator
 ```
+or yarn
 
+```bash
+$ yarn add @blueromans/sdp-translator
+```
 ## Implementation
 
 This module gives a general solution to the problem of SDP interoperability
@@ -147,62 +151,3 @@ PeerConnectionAdapter.prototype.createOffer
     );
 };
 ```
-
-### Beyond the basics
-
-Like everything in life, sdp-interop is not "perfect", it makes certain
-assumptions and it has some limitations. First and foremost, unfortunately, a
-Plan B offer/answer does not have enough information to rebuild an equivalent
-Unified Plan offer/answer. So, while it is easy to go from Plan B to Unified
-Plan, the opposite is not possible without keeping some state.
-
-Suppose, for example, that a Firefox client gets an offer from the Focus to
-join a large call. In the _native_ create answer success callback you get a
-Unified Plan answer that contains multiple m-lines. You convert it in a Plan B
-answer using the sdp-interop module and hand it over to the app to do its
-thing. At some point later-on, the app calls the adapter's
-`setLocalDescription()` method. The adapter will have to convert the Plan B
-answer back to a Unified Plan one to pass it to Firefox.
-
-That's the tricky part because you can't naively put any SSRC in any m-line,
-each SSRC has to be put back into the same m-line that it was in the original
-answer from the native create answer success callback. The order of the m-lines
-is important too, so each m-line has to be in the same position it was in the
-original answer from the native create answer success callback (which matches
-the position of the m-line in the Unified Plan offer). It is also forbidden to
-remove an m-line, instead they must be marked as inactive, if they're no longer
-used.  Similar considerations have to be taken into account when converting a
-Plan B offer to a Unified Plan one when doing renegotiation, for example.
-
-We solved this issue by caching both the most recent Unified Plan offer and the
-most recent Unified Plan answer. When we go from Plan B to Unified Plan we use
-the cached Unified Plan offer/answer and add the missing information from
-there. You can see
-[here](https://github.com/jitsi/sdp-interop/blob/d4569a12875a7180004726633793430eccd7f47b/lib/interop.js#L175)
-how we do this exactly.
-
-Another soft limitation (in the sense that it can be removed given enough
-effort) is that we require bundle and rtcp-mux for both Chrome and Firefox
-endpoints, so all the media whatever the channel is, go through a single port. This is tracked in [issue #3](https://github.com/jitsi/sdp-interop/issues/3).
-
-One last soft limitation is that we have currently tested the interoperability
-layer only when Firefox answers a call and not when it offers one because in
-our architecture endpoints always get invited to join a call and never offer
-one. This is tracked in [issue #4](https://github.com/jitsi/sdp-interop/issues/4).
-
-## Copyright notice
-
-Copyright @ 2015 Atlassian Pty Ltd
-Copyright @ 2016 Kurento (http://kurento.org/)
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
